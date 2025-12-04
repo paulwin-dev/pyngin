@@ -11,7 +11,7 @@ class Node(EngineObject):
         self._children = []
         self._parent = None
         self._lockedProperties = []
-        self._name = self.ClassName
+        self._name = self.class_name
 
         #init properties
         for prop in kwargs.keys():
@@ -19,11 +19,11 @@ class Node(EngineObject):
 
     
     def __str__(self) -> str:
-        return self.Name
+        return self.name
 
     def _checkLock(self, property):
         if property in self._lockedProperties:
-            raise Exception(f"Property '{property}' of {self.FullName} is locked.")
+            raise Exception(f"Property '{property}' of {self.full_name} is locked.")
 
     def _addLock(self, property):
         if property not in self._lockedProperties:
@@ -33,44 +33,44 @@ class Node(EngineObject):
     ###### PROPERTIES ######
 
     @property
-    def Name(self) -> str:
+    def name(self) -> str:
         return self._name
 
-    @Name.setter
-    def Name(self, value: str):
+    @name.setter
+    def name(self, value: str):
         if type(value) != str:
             raise Exception("Type error: 'Name' must be a string.")
 
         self._name = value
 
     @property
-    def FullName(self):
-        fullName = self.Name
-        curParent = self.Parent
+    def full_name(self):
+        fullName = self.name
+        curParent = self.parent
 
         while curParent != None:
-            fullName = curParent.Name + "." + fullName
-            curParent = curParent.Parent
+            fullName = curParent.name + "." + fullName
+            curParent = curParent.parent
 
         return fullName
 
     @property
-    def ClassName(self) -> str:
+    def class_name(self) -> str:
         return type(self).__name__
     
     @property
-    def Children(self) -> list["Node"]:
+    def children(self) -> list["Node"]:
         return self._children.copy()
     
     @property
-    def Parent(self) -> Optional["Node"]:
+    def parent(self) -> Optional["Node"]:
         """
         Determines the hierarchical parent of this `Node`.
         """
         return self._parent
     
-    @Parent.setter
-    def Parent(self, value: Optional["Node"]):
+    @parent.setter
+    def parent(self, value: Optional["Node"]):
         if type(value) != Node:
             raise Exception("Type error: 'Name' must be a string.")
 
@@ -80,13 +80,13 @@ class Node(EngineObject):
 
     ###### METHODS ######
 
-    def Destroy(self):
+    def destroy(self):
         """
         Sets `self.Parent` to None and locks it, disconnects all connections, and calls `Destroy` on all child nodes.
         """
 
-        self.Parent = None
+        self.parent = None
         self._addLock("Parent")
 
-        for child in self.Children:
-            child.Destroy()
+        for child in self.children:
+            child.destroy()
