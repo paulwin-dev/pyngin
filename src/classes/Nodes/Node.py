@@ -1,8 +1,8 @@
 from typing import Any, Optional
 
-from .EngineObject import EngineObject
+from ..base.engine_base import EngineBase
 
-class Node(EngineObject):
+class Node(EngineBase):
     """
     Represents a node in the hierarchical structure.
     """
@@ -71,11 +71,18 @@ class Node(EngineObject):
     
     @parent.setter
     def parent(self, value: Optional["Node"]):
-        if type(value) != Node:
-            raise Exception("Type error: 'Name' must be a string.")
-
         self._checkLock("Parent")
+
+        if not isinstance(value, Node) and value != None:
+            raise Exception("Type error: 'Parent' must be a node.")        
+
+        if self.parent != None:
+            self.parent._children.remove(self)
+
         self._parent = value
+
+        if self._parent != None:
+            self._parent._children.append(self)
 
 
     ###### METHODS ######

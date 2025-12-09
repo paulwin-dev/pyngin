@@ -1,4 +1,8 @@
-class Vector2:
+import math
+from ..base.engine_base import EngineBase
+
+
+class Vector2(EngineBase):
     def __init__(self, x: float = 0, y: float = 0) -> None:
         self._x = x
         self._y = y
@@ -10,6 +14,10 @@ class Vector2:
     @property
     def y(self):
         return self._y
+    
+    @property
+    def magnitude(self):
+        return math.sqrt(self.x**2 + self.y**2)
     
     def __str__(self) -> str:
         return f"({self.x}, {self.y})"

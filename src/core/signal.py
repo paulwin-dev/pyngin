@@ -24,7 +24,7 @@ class Signal(Generic[P, R]):
         return conn
     
 
-    def Emit(self, *args: P.args, **kwargs: P.kwargs) -> None:
+    def emit(self, *args: P.args, **kwargs: P.kwargs) -> None:
         for conn in list(self._connections):
             t = threading.Thread(
                 target=conn.callback,
