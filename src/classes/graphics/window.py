@@ -21,12 +21,17 @@ class Window(EngineBase):
     
     @fullscreen.setter
     def fullscreen(self, value: bool):
+
+        
         self._fullscreen = value
         self._root.systems.game_loop._action_queue.put((self._mt_update_fullscreen, (), {}))
         
 
     def _mt_update_fullscreen(self):
+        pygame.display.quit()
         if self.fullscreen:
-            self._surface = pygame.display.set_mode(flags=pygame.FULLSCREEN)
+            self._surface = pygame.display.set_mode((0,0),flags=pygame.FULLSCREEN)
         else:
             self._surface = pygame.display.set_mode((constants.DEFAULT_WIDTH, constants.DEFAULT_HEIGHT), pygame.RESIZABLE)
+
+        pygame.display.init()
