@@ -1,3 +1,3 @@
+from classes.nodes.drawable import rect
 from engine import root
 
-root.systems.graphics.window.fullscreen = True

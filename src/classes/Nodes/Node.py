@@ -87,6 +87,13 @@ class Node(EngineBase):
 
     ###### METHODS ######
 
+    def get_node(self, name: str) -> Optional["Node"]:
+        for node in self.children:
+            if node.name == name:
+                return node
+        
+        return None
+
     def destroy(self):
         """
         Sets `self.Parent` to None and locks it, disconnects all connections, and calls `Destroy` on all child nodes.

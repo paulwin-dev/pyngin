@@ -1,6 +1,10 @@
+import pygame
+
 from ..base.engine_base import EngineBase
 
-class Color(EngineBase):
+Color = pygame.Color
+
+"""class Color(EngineBase):
     def __init__(self, r, g, b) -> None:
         self._r = r
         self._g = g
@@ -20,3 +24,4 @@ class Color(EngineBase):
     
     def __str__(self) -> str:
         return f"({self.r}, {self.g}, {self.b})"
+"""
