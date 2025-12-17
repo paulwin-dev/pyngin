@@ -22,7 +22,11 @@ class SystemContainer(EngineBase):
         self._scripts = ScriptLoader(self._root)
 
         self._graphics._init()
+
+    def _load_scripts(self):
         self._scripts._load_scripts()
+
+    def _start_gameloop(self):
         self._gameloop._init()
 
     @property

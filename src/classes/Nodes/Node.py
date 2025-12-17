@@ -1,6 +1,10 @@
-from typing import Any, Optional
+from typing import Any, Optional, Type, TypeVar
+
+from classes.exceptions.node_exceptions import NodeNotFoundError, UnexpectedNodeTypeError
 
 from ..base.engine_base import EngineBase
+
+TNode = TypeVar("TNode", bound="Node")
 
 class Node(EngineBase):
     """
@@ -49,7 +53,7 @@ class Node(EngineBase):
         curParent = self.parent
 
         while curParent != None:
-            fullName = curParent.name + "." + fullName
+            fullName = curParent.name + "/" + fullName
             curParent = curParent.parent
 
         return fullName
@@ -86,13 +90,32 @@ class Node(EngineBase):
 
 
     ###### METHODS ######
-
-    def get_node(self, name: str) -> Optional["Node"]:
+    def _get_node_by_name(self, name):
         for node in self.children:
             if node.name == name:
                 return node
         
         return None
+
+    def get_node(self, name: str, node_type: Type[TNode] | None = None) -> TNode:
+        node = self._get_node_by_name(name)
+
+        if node is None:
+            raise NodeNotFoundError(self.full_name+"/"+name)
+        
+        if node_type is not None and not isinstance(node, node_type):
+            print("uhoh")
+            raise UnexpectedNodeTypeError(node.full_name, node_type.__name__, type(node).__name__)
+        
+        return node
+
+    def get_node_or_none(self, name: str, node_type: Type[TNode] | None = None) -> Optional[TNode]:
+        node = self._get_node_by_name(name)
+
+        if node is None:
+            return None
+
+        return node
 
     def destroy(self):
         """
