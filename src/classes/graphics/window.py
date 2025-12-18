@@ -21,8 +21,6 @@ class Window(EngineBase):
     
     @fullscreen.setter
     def fullscreen(self, value: bool):
-
-        
         self._fullscreen = value
         self._root.systems.game_loop._action_queue.put((self._mt_update_fullscreen, (), {}))
         

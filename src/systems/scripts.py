@@ -2,9 +2,13 @@ import os
 import threading
 
 from pathlib import Path
+import traceback
 
+from classes.exceptions.engine_exception import EngineError
+from classes.exceptions.script_exceptions import ScriptError
 from constants import SCRIPT_DIRECTORY_PATH
 from classes.base.engine_base import EngineBase
+from core import logger
 
 class ScriptLoader(EngineBase):
     def __init__(self, root) -> None:
@@ -22,9 +26,19 @@ class ScriptLoader(EngineBase):
             with open(file, "r", encoding="utf8") as f:
                 contents = f.read()
 
-            self._run_script(contents)
+            self._run_script(str(file) ,contents)
 
-    def _run_script(self, scriptContents: str):
+    def _run_script(self, script_path: str, script_contents: str):
         local_env = {}
-        thread = threading.Thread(target=exec, args=(scriptContents, local_env))
+        thread = threading.Thread(target=self._script_worker, args=(script_path, script_contents))
         thread.start()
+
+    def _script_worker(self, script_path: str, script_contents: str):
+        local_env = {}
+        
+        try:
+            exec(script_contents, local_env)
+        except EngineError as e:
+            tb = traceback.format_exc()
+            err = ScriptError(script_path, e.__class__.__name__, str(e), tb)
+            logger.error(str(err))
