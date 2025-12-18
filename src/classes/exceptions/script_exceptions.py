@@ -1,30 +1,44 @@
+import traceback
+from types import TracebackType
 from classes.exceptions.engine_exception import EngineError
 
-
 class ScriptError(EngineError):
-    def __init__(self, script: str, error_name: str, message: str, traceback: str):
-        super().__init__(message)
+    def __init__(self, script_path: str, exc: Exception, tb: TracebackType):
+        
+        self.script_path = script_path
+        self.exc = exc
 
-        self.script = script
-        self.error_name = error_name
-        self.message = message
-        self.traceback = None
+        self.frame = self._extract_script_frame(tb)
+        self.location = self._format_frame(self.frame)
 
-        tb_index = traceback.find('File "<string>", line')
+        super().__init__(str(exc))
 
-        i = tb_index + 1
-        while True:
-            if traceback[i] == "\n":
-                break
-            i += 1
+    def _extract_script_frame(self, tb: TracebackType):
+        frames = traceback.extract_tb(tb)
+        script = self.script_path
 
-        self.traceback = traceback[tb_index:i]
-                
+        res = None
 
+        for frame in frames:
+            if frame.filename == script:
+                res = frame
 
-    def __str__(self) -> str:
+        return res
+
+    def _format_frame(self, frame):
+        if frame is None:
+            return "Unknown script location"
+
         return (
-            f"{self.script}\n"
-            f"{self.error_name}: {self.message}\n"
-            f"\t{self.traceback}"
+            f'File "{frame.filename}", '
+            f"line {frame.lineno}, "
+            f"in {frame.name}\n"
+            f"  >> {frame.line}"
+        )
+
+    def __str__(self):
+        return (
+            f"[SCRIPT ERROR]\n"
+            f"{self.location}\n\n"
+            f"{type(self.exc).__name__}: {self.exc}"
         )

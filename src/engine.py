@@ -1,5 +1,5 @@
 from classes.graphics.window import Window
-from classes.nodes.root import Root
+from classes.nodes.core.root import Root
 
 
 root: Root

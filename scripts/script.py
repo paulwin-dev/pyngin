@@ -1,8 +1,7 @@
-from classes.nodes.drawable.rect import Rect
+from classes.nodes.drawable.ui.rect import Rect
 from classes.types.color import Color
 from engine import root, window
 
-print("Hey!")
+rect = Rect(parent=root)
+rect._draw(window._surface)
 
-r = Rect(parent=root, name="test")
-print(root.get_node("test", Color))

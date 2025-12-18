@@ -29,16 +29,15 @@ class ScriptLoader(EngineBase):
             self._run_script(str(file) ,contents)
 
     def _run_script(self, script_path: str, script_contents: str):
-        local_env = {}
         thread = threading.Thread(target=self._script_worker, args=(script_path, script_contents))
         thread.start()
 
     def _script_worker(self, script_path: str, script_contents: str):
         local_env = {}
+        code = compile(script_contents, str(script_path), "exec")
         
         try:
-            exec(script_contents, local_env)
-        except EngineError as e:
-            tb = traceback.format_exc()
-            err = ScriptError(script_path, e.__class__.__name__, str(e), tb)
+            exec(code, local_env)
+        except Exception as e:
+            err = ScriptError(script_path, e, e.__traceback__)
             logger.error(str(err))

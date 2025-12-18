@@ -97,19 +97,18 @@ class Node(EngineBase):
         
         return None
 
-    def get_node(self, name: str, node_type: Type[TNode] | None = None) -> TNode:
+    def get_node(self, name: str, node_type: Type[TNode] | None = None) -> TNode | "Node":
         node = self._get_node_by_name(name)
 
         if node is None:
             raise NodeNotFoundError(self.full_name+"/"+name)
         
         if node_type is not None and not isinstance(node, node_type):
-            print("uhoh")
             raise UnexpectedNodeTypeError(node.full_name, node_type.__name__, type(node).__name__)
         
         return node
 
-    def get_node_or_none(self, name: str, node_type: Type[TNode] | None = None) -> Optional[TNode]:
+    def get_node_or_none(self, name: str, node_type: Type[TNode] | None = None) -> Optional[TNode | "Node"]:
         node = self._get_node_by_name(name)
 
         if node is None:

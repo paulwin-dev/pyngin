@@ -1,6 +1,7 @@
 from classes.nodes.node import Node
-from classes.nodes.root import Root
+from classes.nodes.core.root import Root
 
+from core import logger
 import engine
 
 root = Root()
