@@ -33,5 +33,5 @@ class GameLoopManager(EngineBase):
                 error = self._error_queue.get()
                 logger.error(error)
 
-            pygame.display.flip()
+            self._root.systems.graphics._render_frame()
             self.clock.tick(self.fps)

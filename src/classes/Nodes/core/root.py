@@ -1,3 +1,4 @@
+from classes.nodes.core.world import World
 from ...other.system_container import SystemContainer
 from ..node import Node
 
@@ -10,9 +11,18 @@ class Root(Node):
 
         self._systems: SystemContainer
 
+        self._create_trivial_children()
+
+    def _create_trivial_children(self):
+        World(parent=self)
+
     def _init(self):
         self._systems = SystemContainer(self)
         self._systems._load()
+
+    @property
+    def world(self):
+        return self.get_node("world")
 
     @property
     def engine_version(self):
