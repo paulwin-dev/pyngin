@@ -1,5 +1,8 @@
 from datetime import datetime
 from enum import Enum
+from typing import Callable
+
+attached_logger = None
 
 class LogLevel(Enum):
     INFO = "INFO"
@@ -25,3 +28,13 @@ def warn(msg: str):
 
 def error(msg: str):
     log(LogLevel.ERROR, msg)
+
+def attach(logger_func: Callable[[str], None]):
+    global attached_logger
+    
+    attached_logger = logger_func
+
+def detach():
+    global attached_logger
+
+    attached_logger = None

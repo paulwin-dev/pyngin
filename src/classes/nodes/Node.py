@@ -115,6 +115,30 @@ class Node(EngineBase):
             return None
 
         return node
+    
+    def _get_node_of_class(self, node_type):
+        for node in self.children:
+            if isinstance(node, node_type):
+                return node
+            
+    def get_node_of_class(self, node_class: Type[TNode]) -> TNode:
+        node = self._get_node_of_class(node_class)
+
+        if node is None:
+            raise NodeNotFoundError(self.full_name+"/ with class "+node_class.__name__)
+        
+        return node
+        
+    def get_node_of_class_or_none(self, node_class: Type[TNode])  -> Optional[TNode | "Node"]:
+        node = self._get_node_of_class(node_class)
+
+        if node is None:
+            return None
+        
+        return node
+            
+    def is_class(self, node_class):
+        return isinstance(self, node_class)
 
     def destroy(self):
         """

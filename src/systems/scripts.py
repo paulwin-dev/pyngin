@@ -2,11 +2,12 @@ import os
 import threading
 
 from pathlib import Path
-import traceback
+
+from constants import SCRIPT_DIRECTORY_PATH
 
 from classes.exceptions.engine_exception import EngineError
 from classes.exceptions.script_exceptions import ScriptError
-from constants import SCRIPT_DIRECTORY_PATH
+
 from classes.base.engine_base import EngineBase
 from core import logger
 

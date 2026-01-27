@@ -1,5 +1,6 @@
 import pygame
 
+from classes.nodes.drawable.world.node_2d import Node2D
 from classes.base.engine_base import EngineBase
 from classes.graphics.window import Window
 from core import logger
@@ -30,5 +31,6 @@ class Renderer(EngineBase):
         self._root = root
 
     def render_world(self):
-        for node in self._root.world.get_children():
+        for node in self._root.world.children:
+            if not node.is_class(Node2D) or not node.can_render: continue
             logger.info(node)
