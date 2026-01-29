@@ -1,6 +1,8 @@
 from typing import Any, Optional, Type, TypeVar
+import typing
 
-from classes.exceptions.node_exceptions import NodeNotFoundError, UnexpectedNodeTypeError
+from classes.exceptions.node_exceptions import NodeNotFoundError, PropertyNotFoundError, UnexpectedNodeTypeError
+from core.signal import Signal
 
 from ..base.engine_base import EngineBase
 
@@ -15,6 +17,7 @@ class Node(EngineBase):
         self._children = []
         self._parent = None
         self._lockedProperties = []
+        self._propertyChangedSignals = {}
         self._name = self.class_name
 
         #init properties
@@ -127,7 +130,7 @@ class Node(EngineBase):
         if node is None:
             raise NodeNotFoundError(self.full_name+"/ with class "+node_class.__name__)
         
-        return node
+        return typing.cast(TNode, node)
         
     def get_node_of_class_or_none(self, node_class: Type[TNode])  -> Optional[TNode | "Node"]:
         node = self._get_node_of_class(node_class)
@@ -150,3 +153,16 @@ class Node(EngineBase):
 
         for child in self.children:
             child.destroy()
+
+    def get_property_changed_signal(self, property_name: str):
+        if not hasattr(self, property_name):
+            raise PropertyNotFoundError(self.full_name, property_name, self.class_name)
+        
+        if self._propertyChangedSignals[property_name] is None:
+            self._propertyChangedSignals[property_name] = Signal()
+
+        return self._propertyChangedSignals[property_name]
+
+
+    def _set_prop(self, privProp, value, publicProp):
+        pass

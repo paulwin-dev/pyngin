@@ -10,3 +10,9 @@ class UnexpectedNodeTypeError(EngineError):
         super().__init__(
             f"Expected node '{path}' to be of type {expected}, got {actual}."
         )
+
+class PropertyNotFoundError(EngineError):
+    def __init__(self, path, property_name, class_name) -> None:
+        super().__init__(
+            f"Property {property_name} not found in {class_name} '{path}'"
+        )
